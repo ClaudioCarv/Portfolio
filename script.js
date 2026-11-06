@@ -20,14 +20,17 @@ const PROJETOS = [
     titulo: "Tia Fatia",
     texto: "Site de pizzaria criado no curso de desenvolvimento web, em equipe com colegas de turma.",
     tags: ["HTML", "CSS", "JavaScript"], status: "Concluído",
-    link: "https://github.com/ClaudioCarv/tia_fatia", video: "motions/tia fatia motion.mp4"
+    github: "https://github.com/ClaudioCarv/tia_fatia",
+    app: "https://claudiocarv.github.io/Tia_Fatia/",
+    video: "motions/tia fatia motion.mp4"
   },
   {
-    titulo: "Recomendação de Filmes",
-    texto: "Sistema de recomendação com TF-IDF e similaridade de cosseno, com interface interativa em Streamlit.",
+    titulo: "CineMatch Recommendations",
+    texto: "Sistema de recomendação de filmes baseado em TF-IDF, com interface em Streamlit.",
     tags: ["Python", "TF-IDF", "Streamlit"], status: "Concluído",
-    link: "https://github.com/ClaudioCarv?tab=repositories", /* TROQUE pelo link do repositório */
-    img: "img/logo recomendacao filmes.png"
+    github: "https://github.com/ClaudioCarv?tab=repositories", /* TROQUE pelo link do repositório */
+    app: "https://recomendacaofilmes.streamlit.app/",
+    video: "motions/Cinematch Recommendations.mp4"
   },
   {
     titulo: "Análise de e-commerce (Olist)",
@@ -71,8 +74,7 @@ function el(tag, classe, texto) {
 
 // variante: "proj" (projeto), "tool" (ferramenta) ou "line" (linha simples)
 function criarCard(d, variante) {
-  const c = el(d.link ? "a" : "div", "card" + (variante === "line" ? " card--line" : ""));
-  if (d.link) { c.href = d.link; c.target = "_blank"; c.rel = "noopener"; }
+  const c = el("div", "card" + (variante === "line" ? " card--line" : ""));
 
   if (variante === "proj") {
     const t = el("div", "thumb");
@@ -85,7 +87,7 @@ function criarCard(d, variante) {
       video.preload = "metadata";
       video.setAttribute("aria-label", `Prévia em vídeo do projeto ${d.titulo}`);
       video.addEventListener("timeupdate", () => {
-        if (video.currentTime >= 10) {
+        if (video.currentTime >= 19) {
           video.currentTime = 0;
           video.play();
         }
@@ -123,6 +125,41 @@ function criarCard(d, variante) {
     const tg = el("div", "tags");
     d.tags.forEach(x => tg.append(el("span", "tag", x)));
     c.append(tg);
+  }
+
+  if (variante === "proj" && (d.github || d.app)) {
+    const acoes = el("div", "project-actions");
+    if (d.github) {
+      const github = el("a", "btn project-btn");
+      github.href = d.github;
+      github.target = "_blank";
+      github.rel = "noopener";
+      const githubIcon = el("i", "devicon-github-original");
+      githubIcon.setAttribute("aria-hidden", "true");
+      github.append(githubIcon, el("span", "", "GitHub"));
+      acoes.append(github);
+    }
+    if (d.app) {
+      const app = el("a", "btn project-btn");
+      app.href = d.app;
+      app.target = "_blank";
+      app.rel = "noopener";
+      const appIcon = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+      appIcon.setAttribute("viewBox", "0 0 24 24");
+      appIcon.setAttribute("aria-hidden", "true");
+      appIcon.setAttribute("focusable", "false");
+      const appIconPath = document.createElementNS("http://www.w3.org/2000/svg", "path");
+      appIconPath.setAttribute("d", "M14 4h6v6M20 4l-9 9M18 13v6a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h6");
+      appIconPath.setAttribute("fill", "none");
+      appIconPath.setAttribute("stroke", "currentColor");
+      appIconPath.setAttribute("stroke-width", "2");
+      appIconPath.setAttribute("stroke-linecap", "round");
+      appIconPath.setAttribute("stroke-linejoin", "round");
+      appIcon.append(appIconPath);
+      app.append(appIcon, el("span", "", "Acessar aplicação"));
+      acoes.append(app);
+    }
+    c.append(acoes);
   }
   return c;
 }
